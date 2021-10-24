@@ -1,0 +1,17 @@
+/.idea
+vendor/*
+/public/storage
+Homestead.yaml
+Homestead.json
+.env
+storage/framework
+storage/logs
+/storage
+_ide_helper.php
+composer.lock
+*.phar
+.vscode
+Homestead.yaml
+Homestead.json
+/node_modules
+node_modules/*
