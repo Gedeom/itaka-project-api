@@ -79,7 +79,7 @@ class ResponseService
                 return response()->json([
                     'status' => false,
                     'statusCode' => 500,
-                    'error'  => 'Problema ao realizar a operação.' . $e->getMessage(),
+                    'error'  => 'Problema ao realizar a operação.' . $e->getMessage() .  $e->getTraceAsString(),
                     'url'    => $id != null ? route($route,$id) : route($route)
                 ],500);
                 break;

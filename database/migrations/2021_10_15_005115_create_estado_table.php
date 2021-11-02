@@ -17,7 +17,7 @@ class CreateEstadoTable extends Migration
             $table->increments('id');
             $table->string('nome');
             $table->string('uf');
-            $table->integer('ibge');
+            $table->integer('ibge')->nullable();
             $table->unsignedInteger('pais_id')->nullable();
             $table->string('ddd')->nullable();
             $table->timestamps();

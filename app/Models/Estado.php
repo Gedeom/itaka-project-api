@@ -45,4 +45,10 @@ class Estado extends Model
     public function cidades(){
         return $this->hasMany(Cidade::class,'estado_id');
     }
+
+    public static function get($estado){
+        $estado_obj = Estado::where('nome', '=', $estado)->first();
+
+        return $estado_obj;
+    }
 }

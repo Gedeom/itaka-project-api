@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LogradouroController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,13 +19,16 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::post('login', [UserController::class,'login'])->name('users.login');
+Route::post('login', [UserController::class, 'login'])->name('users.login');
 
-
-Route::group(['middleware' => 'jwt.verify'],function () {
+Route::group(['middleware' => 'jwt.verify'], function () {
     //Users
     Route::apiResource('users', UserController::class);
-    Route::post('logout', [UserController::class,'logout'])->name('users.logout');
+    Route::post('logout', [UserController::class, 'logout'])->name('users.logout');
+
+    //Address
+    Route::apiResource('address', LogradouroController::class);
+    Route::post('address/search', [LogradouroController::class,'search'])->name('address.search');
 });
 
 

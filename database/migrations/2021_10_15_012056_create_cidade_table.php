@@ -17,8 +17,8 @@ class CreateCidadeTable extends Migration
             $table->increments('id');
             $table->string('nome');
             $table->unsignedInteger('estado_id');
-            $table->integer('ibge');
-            $table->string('ddd');
+            $table->integer('ibge')->nullable();
+            $table->string('ddd')->nullable();
             $table->timestamps();
 
             $table->foreign('estado_id','fk_cidade_estado_foreign')->references('id')->on('estado');

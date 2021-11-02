@@ -2,8 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Utils\SearchUtils;
+use Eloquent;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Logradouro
@@ -12,23 +18,23 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $nome
  * @property string $cep
  * @property int $bairro_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Bairro $bairro
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Escola[] $escolas
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Bairro $bairro
+ * @property-read Collection|Escola[] $escolas
  * @property-read int|null $escolas_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PessoaEndereco[] $pessoa_enderecos
+ * @property-read Collection|PessoaEndereco[] $pessoa_enderecos
  * @property-read int|null $pessoa_enderecos_count
- * @method static \Illuminate\Database\Eloquent\Builder|Logradouro newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Logradouro newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Logradouro query()
- * @method static \Illuminate\Database\Eloquent\Builder|Logradouro whereBairroId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Logradouro whereCep($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Logradouro whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Logradouro whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Logradouro whereNome($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Logradouro whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|Logradouro newModelQuery()
+ * @method static Builder|Logradouro newQuery()
+ * @method static Builder|Logradouro query()
+ * @method static Builder|Logradouro whereBairroId($value)
+ * @method static Builder|Logradouro whereCep($value)
+ * @method static Builder|Logradouro whereCreatedAt($value)
+ * @method static Builder|Logradouro whereId($value)
+ * @method static Builder|Logradouro whereNome($value)
+ * @method static Builder|Logradouro whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Logradouro extends Model
 {
@@ -36,15 +42,125 @@ class Logradouro extends Model
 
     protected $table = 'logradouro';
 
-    public function bairro(){
-        return $this->belongsTo(Bairro::class,'bairro_id');
+    public function bairro()
+    {
+        return $this->belongsTo(Bairro::class, 'bairro_id');
     }
 
-    public function escolas(){
-        return $this->hasMany(Escola::class,'logradouro_id');
+    public function escolas()
+    {
+        return $this->hasMany(Escola::class, 'logradouro_id');
     }
 
-    public function pessoa_enderecos(){
-        return $this->hasMany(PessoaEndereco::class,'logradouro_id');
+    public function pessoa_enderecos()
+    {
+        return $this->hasMany(PessoaEndereco::class, 'logradouro_id');
+    }
+
+    public function index()
+    {
+        return self::join('bairro', 'bairro.id', '=', 'bairro_id')
+            ->join('cidade', 'cidade.id', '=', 'cidade_id')
+            ->join('estado', 'estado.id', '=', 'estado_id')
+            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro.nome as bairro, cidade.nome as cidade, estado.nome as estado')
+            ->orderByRaw('estado, cidade, bairro, logradouro.nome,cep')
+            ->paginate(50);
+    }
+
+    public function createOrUpdate($fields, $id = null)
+    {
+        $fields = (object)$fields;
+        $cep = preg_replace('/[^0-9]/', '', $fields->cep);
+        $exist_lograd = $this->existLograd($cep,$fields->bairro,$fields->cidade,$fields->estado,$id);
+
+        if($exist_lograd)
+            throw new Exception('Logradouro já existe!', -403);
+
+        if ($id) {
+            $logradouro = Logradouro::find($id);
+        } else {
+            $logradouro = new Logradouro();
+        }
+
+        $bairro = Bairro::getOrCreate($fields->bairro, $fields->cidade, $fields->estado);
+        $logradouro->nome = $fields->logradouro;
+        $logradouro->cep = $cep;
+        $logradouro->bairro_id = $bairro->id;
+        $logradouro->save();
+
+
+        $logradouro_tmp = self::join('bairro', 'bairro.id', '=', 'bairro_id')
+            ->join('cidade', 'cidade.id', '=', 'cidade_id')
+            ->join('estado', 'estado.id', '=', 'estado_id')
+            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro.nome as bairro, cidade.nome as cidade, estado.nome as estado')
+            ->where('logradouro.id', '=', $logradouro->id)
+            ->first();
+
+        return $logradouro_tmp;
+    }
+
+    public function show($id)
+    {
+        $show = self::join('bairro', 'bairro.id', '=', 'bairro_id')
+            ->join('cidade', 'cidade.id', '=', 'cidade_id')
+            ->join('estado', 'estado.id', '=', 'estado_id')
+            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro.nome as bairro, cidade.nome as cidade, estado.nome as estado')
+            ->where('logradouro.id', '=', $id)
+            ->first();
+
+        if (!$show) {
+            throw new Exception('Nada Encontrado', -404);
+        }
+
+        return $show;
+    }
+
+    public function remove($id)
+    {
+        $lograd = Logradouro::find($id);
+
+        if (!$lograd) {
+            throw new Exception('Nada Encontrado', -404);
+        }
+
+        $logradouro_tmp = self::join('bairro', 'bairro.id', '=', 'bairro_id')
+            ->join('cidade', 'cidade.id', '=', 'cidade_id')
+            ->join('estado', 'estado.id', '=', 'estado_id')
+            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro.nome as bairro, cidade.nome as cidade, estado.nome as estado')
+            ->where('logradouro.id', '=', $lograd->id)
+            ->first();
+
+        $lograd->delete();
+        return $logradouro_tmp;
+    }
+
+    public function search($data)
+    {
+        $logradouros = self::join('bairro', 'bairro.id', '=', 'bairro_id')
+            ->join('cidade', 'cidade.id', '=', 'cidade_id')
+            ->join('estado', 'estado.id', '=', 'estado_id')
+            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro.nome as bairro, cidade.nome as cidade, estado.nome as estado')
+            ->orderByRaw('estado, cidade, bairro, logradouro.nome,cep');
+
+        $logradouros = SearchUtils::createQuery($data, $logradouros);
+
+        return $logradouros->get();
+    }
+
+    public function existLograd($cep,$bairro,$cidade,$estado,$id = null){
+        $id = (int) $id;
+
+        $lograd = self::join('bairro', 'bairro.id', '=', 'bairro_id')
+            ->join('cidade', 'cidade.id', '=', 'cidade_id')
+            ->join('estado', 'estado.id', '=', 'estado_id')
+            ->selectRaw('logradouro.*')
+            ->where('logradouro.cep', '=', $cep)
+            ->where('bairro.nome', '=', $bairro)
+            ->where('cidade.nome', '=', $cidade)
+            ->where('estado.nome', '=', $estado)
+            ->where('logradouro.id','<>',$id)
+            ->first();
+
+        return $lograd;
     }
 }
