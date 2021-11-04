@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaGrupoFamiliar wherePessoaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaGrupoFamiliar whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static \Database\Factories\PessoaGrupoFamiliarFactory factory(...$parameters)
  */
 class PessoaGrupoFamiliar extends Model
 {

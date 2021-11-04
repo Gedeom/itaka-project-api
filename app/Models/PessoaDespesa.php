@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaDespesa whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaDespesa whereVlr($value)
  * @mixin \Eloquent
+ * @method static \Database\Factories\PessoaDespesaFactory factory(...$parameters)
  */
 class PessoaDespesa extends Model
 {

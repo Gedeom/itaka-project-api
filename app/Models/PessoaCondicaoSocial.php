@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaCondicaoSocial whereResposta($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaCondicaoSocial whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static \Database\Factories\PessoaCondicaoSocialFactory factory(...$parameters)
  */
 class PessoaCondicaoSocial extends Model
 {

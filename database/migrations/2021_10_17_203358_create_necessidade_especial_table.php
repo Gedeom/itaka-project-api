@@ -18,6 +18,9 @@ class CreateNecessidadeEspecialTable extends Migration
             $table->string('descricao');
             $table->timestamps();
         });
+
+        $seed = new \Database\Seeders\NecessidadeEspecialSeeder();
+        $seed->run();
     }
 
     /**

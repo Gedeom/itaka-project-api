@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade whereTurma($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static \Database\Factories\PessoaEscolaridadeFactory factory(...$parameters)
  */
 class PessoaEscolaridade extends Model
 {

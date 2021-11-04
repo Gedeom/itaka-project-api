@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Escola whereNumeroLograd($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Escola whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static \Database\Factories\EscolaFactory factory(...$parameters)
  */
 class Escola extends Model
 {

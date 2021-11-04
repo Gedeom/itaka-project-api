@@ -11,6 +11,7 @@ class ResponseService
      */
     public static function default($config = array(),$id = null){
         $route = $config['route'];
+
         switch($config['type']){
             case 'store':
                 return [
@@ -24,6 +25,13 @@ class ResponseService
                     'status' => true,
                     'msg'    => 'Requisição realizada com sucesso',
                     'url'    => $id != null ? route($route,$id) : route($route)
+                ];
+                break;
+            case 'search':
+                return [
+                    'status' => true,
+                    'msg'    => 'Requisição realizada com sucesso',
+                    'url'    => route($route)
                 ];
                 break;
             case 'update':

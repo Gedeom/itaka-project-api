@@ -62,7 +62,7 @@ class Logradouro extends Model
         return self::join('bairro', 'bairro.id', '=', 'bairro_id')
             ->join('cidade', 'cidade.id', '=', 'cidade_id')
             ->join('estado', 'estado.id', '=', 'estado_id')
-            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro.nome as bairro, cidade.nome as cidade, estado.nome as estado')
+            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro_id,bairro.nome as bairro, cidade_id,cidade.nome as cidade, estado_id,estado.nome as estado')
             ->orderByRaw('estado, cidade, bairro, logradouro.nome,cep')
             ->paginate(50);
     }
@@ -92,7 +92,7 @@ class Logradouro extends Model
         $logradouro_tmp = self::join('bairro', 'bairro.id', '=', 'bairro_id')
             ->join('cidade', 'cidade.id', '=', 'cidade_id')
             ->join('estado', 'estado.id', '=', 'estado_id')
-            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro.nome as bairro, cidade.nome as cidade, estado.nome as estado')
+            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro_id, bairro.nome as bairro, cidade_id, cidade.nome as cidade, estado_id, estado.nome as estado')
             ->where('logradouro.id', '=', $logradouro->id)
             ->first();
 
@@ -104,7 +104,7 @@ class Logradouro extends Model
         $show = self::join('bairro', 'bairro.id', '=', 'bairro_id')
             ->join('cidade', 'cidade.id', '=', 'cidade_id')
             ->join('estado', 'estado.id', '=', 'estado_id')
-            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro.nome as bairro, cidade.nome as cidade, estado.nome as estado')
+            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro_id, bairro.nome as bairro, cidade_id, cidade.nome as cidade, estado_id, estado.nome as estado')
             ->where('logradouro.id', '=', $id)
             ->first();
 
@@ -126,7 +126,7 @@ class Logradouro extends Model
         $logradouro_tmp = self::join('bairro', 'bairro.id', '=', 'bairro_id')
             ->join('cidade', 'cidade.id', '=', 'cidade_id')
             ->join('estado', 'estado.id', '=', 'estado_id')
-            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro.nome as bairro, cidade.nome as cidade, estado.nome as estado')
+            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro_id, bairro.nome as bairro, cidade_id, cidade.nome as cidade, estado_id, estado.nome as estado')
             ->where('logradouro.id', '=', $lograd->id)
             ->first();
 
@@ -139,7 +139,7 @@ class Logradouro extends Model
         $logradouros = self::join('bairro', 'bairro.id', '=', 'bairro_id')
             ->join('cidade', 'cidade.id', '=', 'cidade_id')
             ->join('estado', 'estado.id', '=', 'estado_id')
-            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro.nome as bairro, cidade.nome as cidade, estado.nome as estado')
+            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro_id, bairro.nome as bairro, cidade_id, cidade.nome as cidade, estado_id, estado.nome as estado')
             ->orderByRaw('estado, cidade, bairro, logradouro.nome,cep');
 
         $logradouros = SearchUtils::createQuery($data, $logradouros);
@@ -163,4 +163,15 @@ class Logradouro extends Model
 
         return $lograd;
     }
+
+
+//    public static function boot() {
+//        parent::boot();
+//        self::deleting(function($lograd) { // before delete() method call this
+//            $lograd->comments()->each(function($comment) {
+//                $comment->delete(); // <-- direct deletion
+//            });
+//            // do the rest of the cleanup...
+//        });
+//    }
 }

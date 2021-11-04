@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LogradouroController;
+use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,7 +29,11 @@ Route::group(['middleware' => 'jwt.verify'], function () {
 
     //Address
     Route::apiResource('address', LogradouroController::class);
-    Route::post('address/search', [LogradouroController::class,'search'])->name('address.search');
+    Route::post('address/search', [LogradouroController::class, 'search'])->name('address.search');
+
+    //Person
+    Route::apiResource('person', PessoaController::class);
+    Route::post('person/search', [PessoaController::class, 'search'])->name('person.search');
 });
 
 

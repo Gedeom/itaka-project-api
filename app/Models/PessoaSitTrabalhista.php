@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaSitTrabalhista whereSitTrabalhistaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaSitTrabalhista whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static \Database\Factories\PessoaSitTrabalhistaFactory factory(...$parameters)
  */
 class PessoaSitTrabalhista extends Model
 {

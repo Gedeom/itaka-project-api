@@ -26,4 +26,40 @@ class CondicaoMoradia extends Model
     use HasFactory;
 
     protected $table = 'condicao_moradia';
+
+    public static $resposta = [
+        1 => [
+            'Sim' => 'Sim',
+            'Não' => 'Não'
+        ],
+        2 => [
+            'Sim' => 'Sim',
+            'Não' => 'Não'
+        ],
+        3 => [
+            'Laje' => 'Laje',
+            'Telha colonial' => 'Telha colonial',
+            'Telha amianto/zinco' => 'Telha amianto/zinco',
+            'Lona' => 'Lona',
+            'Outros' => 'Outros'
+        ],
+        4 => [
+            'Sim' => 'Sim',
+            'Não' => 'Não'
+        ],
+        5 => [
+            'Sim' => 'Sim',
+            'Não' => 'Não',
+            'Coletiva' => 'Coletiva',
+        ],
+        6 => [
+            'Próprio' => 'Próprio',
+            'Alugado' => 'Alugado',
+            'Cedido' => 'Cedido',
+            'Financiado' => 'Financiado',
+        ],
+        7 => [
+            'NÚMERO DE CÔMODOS DA MORADIA' => 'NÚMERO DE CÔMODOS DA MORADIA',
+        ],
+    ];
 }

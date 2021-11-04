@@ -27,8 +27,11 @@ class LogradouroResource extends JsonResource
             'id' => $this->id,
             'logradouro' => $this->nome,
             'cep' => $this->cep,
+            'bairro_id' => $this->bairro_id,
             'bairro' => $this->bairro,
+            'cidade_id' => $this->cidade_id,
             'cidade' => $this->cidade,
+            'estado_id' => $this->estado_id,
             'estado' => $this->estado,
         ];
     }

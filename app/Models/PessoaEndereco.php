@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEndereco wherePessoaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEndereco whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static \Database\Factories\PessoaEnderecoFactory factory(...$parameters)
  */
 class PessoaEndereco extends Model
 {
