@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePessoa;
 use App\Http\Resources\Pessoa\PessoaResource;
 use App\Http\Resources\Pessoa\PessoaResourceCollection;
 use App\Models\Pessoa;
@@ -49,7 +50,7 @@ class PessoaController extends Controller
      * @param Request $request
      * @return JsonResponse|PessoaResource
      */
-    public function store(Request $request)
+    public function store(StorePessoa $request)
     {
         DB::beginTransaction();
         try {
@@ -86,7 +87,7 @@ class PessoaController extends Controller
      * @param int $id
      * @return JsonResponse|PessoaResource
      */
-    public function update(Request $request, $id)
+    public function update(StorePessoa $request, $id)
     {
         DB::beginTransaction();
         try {

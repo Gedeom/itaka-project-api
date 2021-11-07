@@ -2,24 +2,28 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use stdClass;
 
 /**
  * App\Models\CondicaoSocial
  *
  * @property int $id
  * @property string $descricao
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|CondicaoSocial newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|CondicaoSocial newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|CondicaoSocial query()
- * @method static \Illuminate\Database\Eloquent\Builder|CondicaoSocial whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CondicaoSocial whereDescricao($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CondicaoSocial whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CondicaoSocial whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder|CondicaoSocial newModelQuery()
+ * @method static Builder|CondicaoSocial newQuery()
+ * @method static Builder|CondicaoSocial query()
+ * @method static Builder|CondicaoSocial whereCreatedAt($value)
+ * @method static Builder|CondicaoSocial whereDescricao($value)
+ * @method static Builder|CondicaoSocial whereId($value)
+ * @method static Builder|CondicaoSocial whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class CondicaoSocial extends Model
 {

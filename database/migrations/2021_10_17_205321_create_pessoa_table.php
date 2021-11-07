@@ -30,7 +30,7 @@ class CreatePessoaTable extends Migration
             $table->string('tel_celular')->nullable();
             $table->string('tel_emerg1')->nullable();
             $table->string('tel_emerg2')->nullable();
-            $table->string('nome_contato_emerg');
+            $table->string('nome_contato_emerg')->nullable();
             $table->string('alergia',1000)->nullable();
             $table->string('sit_medica_especial',1000)->nullable();
             $table->string('medicacao_controlada',1000)->nullable();

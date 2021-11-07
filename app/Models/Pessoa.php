@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Utils\MaskUtils;
 use App\Models\Utils\SearchUtils;
 use Database\Factories\PessoaFactory;
 use DB;
@@ -92,6 +93,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Pessoa whereTelResidencia($value)
  * @method static Builder|Pessoa whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property-read Collection|Ficha[] $fichas
+ * @property-read int|null $fichas_count
  */
 class Pessoa extends Model
 {
@@ -160,6 +163,11 @@ class Pessoa extends Model
         return $this->hasMany(PessoaSitTrabalhista::class, 'pessoa_id');
     }
 
+    public function fichas()
+    {
+        return $this->hasMany(Ficha::class, 'canditado_id');
+    }
+
     public function index()
     {
         $pessoas = DB::table('pessoa')
@@ -208,20 +216,180 @@ class Pessoa extends Model
             throw new Exception('Nada Encontrado', -404);
         }
 
-        $pessoa_temp = DB::table('pessoa')
-            ->join('sexo', 'sexo.id', '=', 'sexo_id')
-            ->join('cidade', 'cidade.id', '=', 'naturalidade_id')
-            ->join('etnia', 'etnia.id', '=', 'etnia_id')
-            ->selectRaw('pessoa.id, data, pessoa.nome, sexo_id, sexo.descricao as sexo, dt_nascimento, doc, rg, rg_orgao_expedidor, naturalidade_id,
-            cidade.nome as naturalidade,etnia_id, etnia.descricao as etnia,email, tel_residencia, tel_recado, tel_celular,
-            tel_emerg1, tel_emerg2, nome_contato_emerg, alergia, sit_medica_especial, medicacao_controlada, fratura_cirurgia,
-            recomendacao_emergencia_med, renda')
-            ->where('pessoa.id', '=', $id)
-            ->first();
+        $pessoa_temp = $this->show($id);
+
+
+        if($pessoa->fichas->count()){
+            throw new Exception('Pessoa contém ficha, não pode ser deletada', -403);
+        }
 
         $pessoa->delete();
 
         return $pessoa_temp;
+    }
+
+    public function createOrUpdate($fields, $id = null)
+    {
+        $fields = (object)$fields;
+        $doc = preg_replace('/[^0-9]/', '', $fields->doc);
+        $rg = preg_replace('/[^0-9]/', '', $fields->rg);
+        $data = Carbon::createFromFormat('d/m/Y', $fields->data);
+        $dt_nascimento = Carbon::createFromFormat('d/m/Y', $fields->dt_nascimento);
+        $tel_residencia = preg_replace('/[^0-9]/', '', $fields->tel_residencia ?? '');
+        $tel_recado = preg_replace('/[^0-9]/', '', $fields->tel_recado ?? '');
+        $tel_celular = preg_replace('/[^0-9]/', '', $fields->tel_celular ?? '');
+        $tel_emerg1 = preg_replace('/[^0-9]/', '', $fields->tel_emerg1 ?? '');
+        $tel_emerg2 = preg_replace('/[^0-9]/', '', $fields->tel_emerg2 ?? '');
+        $renda = MaskUtils::decimalToSql($fields->renda);
+        $despesas = json_decode($fields->despesas);
+        $condicoes_sociais = json_decode($fields->condicoes_sociais);
+        $condicoes_moradia = json_decode($fields->condicoes_moradia);
+        $grupo_familiar = json_decode($fields->grupo_familiar);
+        $necessidades_especiais = json_decode($fields->necessidades_especiais ?? '[]');
+
+        PessoaGrupoFamiliar::where('pessoa_id', '=', $id)
+            ->where('data', '=', $data)
+            ->delete();
+
+
+        PessoaCondicaoMoradia::whereRaw("endereco_pessoa_id in (select id from pessoa_endereco where pessoa_id = ?)", [$id])
+            ->where('data', '=', $data)
+            ->delete();
+
+        PessoaEndereco::where('pessoa_id', '=', $id)
+            ->where('data', '=', $data)
+            ->delete();
+
+        PessoaCondicaoSocial::where('pessoa_id', '=', $id)
+            ->where('data', '=', $data)
+            ->delete();
+
+        PessoaDespesa::where('pessoa_id', '=', $id)
+            ->where('data', '=', $data)
+            ->delete();
+
+        PessoaEscolaridade::where('pessoa_id', '=', $id)
+            ->where('data', '=', $data)
+            ->delete();
+
+        PessoaEstadoCivil::where('pessoa_id', '=', $id)
+            ->where('data', '=', $data)
+            ->delete();
+
+        PessoaSitTrabalhista::where('pessoa_id', '=', $id)
+            ->where('data', '=', $data)
+            ->delete();
+
+        if ($id) {
+            $pessoa = Pessoa::find($id);
+        } else {
+            $pessoa = new Pessoa();
+            $pessoa->data = $data;
+        }
+
+        $pessoa->nome = $fields->nome;
+        $pessoa->sexo_id = $fields->sexo_id;
+        $pessoa->dt_nascimento = $dt_nascimento;
+        $pessoa->doc = $doc;
+        $pessoa->rg = $rg;
+        $pessoa->rg_orgao_expedidor = $fields->rg_orgao_expedidor;
+        $pessoa->naturalidade_id = $fields->naturalidade_id;
+        $pessoa->etnia_id = $fields->etnia_id;
+        $pessoa->email = $fields->email;
+        $pessoa->tel_residencia = $tel_residencia ?: null;
+        $pessoa->tel_celular = $tel_celular ?: null;
+        $pessoa->tel_recado = $tel_recado ?: null;
+        $pessoa->tel_celular = $tel_celular ?: null;
+        $pessoa->tel_emerg1 = $tel_emerg1 ?: null;
+        $pessoa->tel_emerg2 = $tel_emerg2 ?: null;
+        $pessoa->nome_contato_emerg = $fields->nome_contato_emerg ?? null;
+        $pessoa->alergia = $fields->alergia ?? null;
+        $pessoa->sit_medica_especial = $fields->sit_medica_especial ?? null;
+        $pessoa->medicacao_controlada = $fields->medicacao_controlada ?? null;
+        $pessoa->fratura_cirurgia = $fields->fratura_cirurgia ?? null;
+        $pessoa->recomendacao_emergencia_med = $fields->recomendacao_emergencia_med ?? null;
+        $pessoa->renda = $renda;
+        $pessoa->save();
+
+        $pessoa_end = new PessoaEndereco();
+        $pessoa_end->data = $data;
+        $pessoa_end->pessoa_id = $pessoa->id;
+        $pessoa_end->logradouro_id = $fields->logradouro_id;
+        $pessoa_end->numero_lograd = $fields->numero_lograd;
+        $pessoa_end->complemento_lograd = $fields->complemento_lograd ?? null;
+        $pessoa_end->save();
+
+        $pessoa_escolaridade = new PessoaEscolaridade();
+        $pessoa_escolaridade->data = $data;
+        $pessoa_escolaridade->pessoa_id = $pessoa->id;
+        $pessoa_escolaridade->escola_id = $fields->escola_id;
+        $pessoa_escolaridade->serie = $fields->serie ?? null;
+        $pessoa_escolaridade->turma = $fields->turma ?? null;
+        $pessoa_escolaridade->escolaridade = $fields->escolaridade;
+        $pessoa_escolaridade->save();
+
+        $pessoa_estado_civil = new PessoaEstadoCivil();
+        $pessoa_estado_civil->data = $data;
+        $pessoa_estado_civil->pessoa_id = $pessoa->id;
+        $pessoa_estado_civil->estado_civil_id = $fields->estado_civil_id;
+        $pessoa_estado_civil->save();
+
+        $pessoa_sit_trabalhista = new PessoaSitTrabalhista();
+        $pessoa_sit_trabalhista->data = $data;
+        $pessoa_sit_trabalhista->pessoa_id = $pessoa->id;
+        $pessoa_sit_trabalhista->sit_trabalhista_id = $fields->sit_trabalhista_id;
+        $pessoa_sit_trabalhista->save();
+
+        foreach ($grupo_familiar as $grupo_obj) {
+            $grupo = new PessoaGrupoFamiliar();
+            $grupo->data = $data;
+            $grupo->pessoa_id = $pessoa->id;
+            $grupo->parente_id = $grupo_obj->parente_id;
+            $grupo->parentesco_id = $grupo_obj->parentesco_id;
+            $grupo->save();
+        }
+
+        foreach ($condicoes_moradia as $cond_m_obj) {
+            $condicao_moradia = new PessoaCondicaoMoradia();
+            $condicao_moradia->data = $data;
+            $condicao_moradia->endereco_pessoa_id = $pessoa_end->id;
+            $condicao_moradia->condicao_moradia_id = $cond_m_obj->condicao_moradia_id;
+            $condicao_moradia->resposta = $cond_m_obj->resposta;
+            $condicao_moradia->descricao = $cond_m_obj->descricao ?? null;
+            $condicao_moradia->save();
+        }
+
+        foreach ($condicoes_sociais as $cond_s_obj) {
+            $condicao_social = new PessoaCondicaoSocial();
+            $condicao_social->data = $data;
+            $condicao_social->pessoa_id = $pessoa->id;
+            $condicao_social->condicao_social_id = $cond_s_obj->condicao_social_id;
+            $condicao_social->resposta = $cond_s_obj->resposta;
+            $condicao_social->descricao = $cond_s_obj->descricao ?? null;
+            $condicao_social->save();
+        }
+
+        foreach ($despesas as $desp_obj) {
+            $vlr_desp = MaskUtils::decimalToSql($desp_obj->vlr);
+
+            $despesa = new PessoaDespesa();
+            $despesa->data = $data;
+            $despesa->pessoa_id = $pessoa->id;
+            $despesa->despesa_id = $desp_obj->despesa_id;
+            $despesa->vlr = $vlr_desp;
+            $despesa->observacoes = $desp_obj->observacoes ?? null;
+            $despesa->save();
+        }
+
+        foreach ($necessidades_especiais as $nece_obj) {
+            $necessidade_especial = new PessoaNecessidadeEspecial();
+            $necessidade_especial->data = $data;
+            $necessidade_especial->pessoa_id = $pessoa->id;
+            $necessidade_especial->necessidade_especial_id = $nece_obj->necessidade_especial_id;
+            $necessidade_especial->save();
+        }
+
+        return $this->show($pessoa->id);
     }
 
     public function search($data)
@@ -323,7 +491,7 @@ class Pessoa extends Model
                 ->join('cidade', 'cidade.id', '=', 'cidade_id')
                 ->join('estado', 'estado.id', '=', 'estado_id')
                 ->where('pessoa_id', '=', $p->id)
-                ->selectRaw('pessoa_escolaridade.id, data, escola.escola, serie, turma, escolaridade, logradouro.id as logradouro_id, logradouro.nome as logradouro,
+                ->selectRaw('pessoa_escolaridade.id, data, escola_id,escola.escola, serie, turma, escolaridade, logradouro.id as logradouro_id, logradouro.nome as logradouro,
                 logradouro.cep, numero_lograd, complemento_lograd, bairro_id,bairro.nome as bairro, cidade_id,cidade.nome as cidade, estado_id,estado.nome as estado')
                 ->orderBy('pessoa_escolaridade.data', 'desc')
                 ->orderBy('pessoa_escolaridade.id')
@@ -373,4 +541,24 @@ class Pessoa extends Model
         if ($is_pessoa_obj)
             $pessoas = $pessoas[0];
     }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::deleting(function ($pessoa) { // before delete() method call this
+            $pessoa->relation_grupo_familiar()->delete();
+            PessoaCondicaoMoradia::whereRaw("endereco_pessoa_id in (select id from pessoa_endereco where pessoa_id = ?)", [$pessoa->id])
+                ->delete();
+            $pessoa->relation_endereco()->delete();
+            $pessoa->relation_condicao_social()->delete();
+            $pessoa->relation_despesa()->delete();
+            $pessoa->relation_escolaridade()->delete();
+            $pessoa->relation_estado_civil()->delete();
+            $pessoa->relation_necessidade_especial()->delete();
+            $pessoa->relation_situacao_trabalhista()->delete();
+
+            // do the rest of the cleanup...
+        });
+    }
+
 }

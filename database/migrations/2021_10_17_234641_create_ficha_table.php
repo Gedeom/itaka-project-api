@@ -18,7 +18,7 @@ class CreateFichaTable extends Migration
             $table->date('data');
             $table->integer('numero');
             $table->unsignedInteger('situacao_id');
-            $table->unsignedInteger('canditado_id');
+            $table->unsignedInteger('candidato_id');
             $table->unsignedInteger('responsavel_id');
             $table->unsignedInteger('resp_parentesco_id');
             $table->boolean('processo_is_deferido');

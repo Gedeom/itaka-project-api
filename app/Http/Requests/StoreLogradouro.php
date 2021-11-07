@@ -42,7 +42,7 @@ class StoreLogradouro extends FormRequest
                 'msg' => 'Ops! Algum campo obrigatório não foi preenchido.',
                 'status' => false,
                 'errors' => $validator->errors(),
-                'url' => route('address.store')
+                'url' => route($id ? 'address.update' : 'address.store')
             ], 403));
         }
     }

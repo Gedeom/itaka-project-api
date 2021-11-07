@@ -88,15 +88,7 @@ class Logradouro extends Model
         $logradouro->bairro_id = $bairro->id;
         $logradouro->save();
 
-
-        $logradouro_tmp = self::join('bairro', 'bairro.id', '=', 'bairro_id')
-            ->join('cidade', 'cidade.id', '=', 'cidade_id')
-            ->join('estado', 'estado.id', '=', 'estado_id')
-            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro_id, bairro.nome as bairro, cidade_id, cidade.nome as cidade, estado_id, estado.nome as estado')
-            ->where('logradouro.id', '=', $logradouro->id)
-            ->first();
-
-        return $logradouro_tmp;
+        return $this->show($logradouro->id);
     }
 
     public function show($id)
@@ -123,12 +115,7 @@ class Logradouro extends Model
             throw new Exception('Nada Encontrado', -404);
         }
 
-        $logradouro_tmp = self::join('bairro', 'bairro.id', '=', 'bairro_id')
-            ->join('cidade', 'cidade.id', '=', 'cidade_id')
-            ->join('estado', 'estado.id', '=', 'estado_id')
-            ->selectRaw('logradouro.id, logradouro.nome, logradouro.cep, bairro_id, bairro.nome as bairro, cidade_id, cidade.nome as cidade, estado_id, estado.nome as estado')
-            ->where('logradouro.id', '=', $lograd->id)
-            ->first();
+        $logradouro_tmp = $this->show($lograd->id);
 
         $lograd->delete();
         return $logradouro_tmp;
