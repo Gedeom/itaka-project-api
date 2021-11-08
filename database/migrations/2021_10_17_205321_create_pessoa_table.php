@@ -15,7 +15,7 @@ class CreatePessoaTable extends Migration
     {
         Schema::create('pessoa', function (Blueprint $table) {
             $table->increments('id');
-            $table->date('data');
+            $table->date('dt_criacao');
             $table->string('nome');
             $table->unsignedInteger('sexo_id');
             $table->date('dt_nascimento');

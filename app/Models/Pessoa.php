@@ -174,7 +174,7 @@ class Pessoa extends Model
             ->join('sexo', 'sexo.id', '=', 'sexo_id')
             ->join('cidade', 'cidade.id', '=', 'naturalidade_id')
             ->join('etnia', 'etnia.id', '=', 'etnia_id')
-            ->selectRaw('pessoa.id, data, pessoa.nome, sexo_id, sexo.descricao as sexo, dt_nascimento, doc, rg, rg_orgao_expedidor, naturalidade_id,
+            ->selectRaw('pessoa.id, dt_criacao, pessoa.nome, sexo_id, sexo.descricao as sexo, dt_nascimento, doc, rg, rg_orgao_expedidor, naturalidade_id,
             cidade.nome as naturalidade,etnia_id, etnia.descricao as etnia,email, tel_residencia, tel_recado, tel_celular,
             tel_emerg1, tel_emerg2, nome_contato_emerg, alergia, sit_medica_especial, medicacao_controlada, fratura_cirurgia,
             recomendacao_emergencia_med, renda')
@@ -191,7 +191,7 @@ class Pessoa extends Model
             ->join('sexo', 'sexo.id', '=', 'sexo_id')
             ->join('cidade', 'cidade.id', '=', 'naturalidade_id')
             ->join('etnia', 'etnia.id', '=', 'etnia_id')
-            ->selectRaw('pessoa.id, data, pessoa.nome, sexo_id, sexo.descricao as sexo, dt_nascimento, doc, rg, rg_orgao_expedidor, naturalidade_id,
+            ->selectRaw('pessoa.id, dt_criacao, pessoa.nome, sexo_id, sexo.descricao as sexo, dt_nascimento, doc, rg, rg_orgao_expedidor, naturalidade_id,
             cidade.nome as naturalidade,etnia_id, etnia.descricao as etnia,email, tel_residencia, tel_recado, tel_celular,
             tel_emerg1, tel_emerg2, nome_contato_emerg, alergia, sit_medica_especial, medicacao_controlada, fratura_cirurgia,
             recomendacao_emergencia_med, renda')
@@ -284,7 +284,7 @@ class Pessoa extends Model
             $pessoa = Pessoa::find($id);
         } else {
             $pessoa = new Pessoa();
-            $pessoa->data = $data;
+            $pessoa->dt_criacao = $data;
         }
 
         $pessoa->nome = $fields->nome;
@@ -398,7 +398,7 @@ class Pessoa extends Model
             ->join('sexo', 'sexo.id', '=', 'sexo_id')
             ->join('cidade', 'cidade.id', '=', 'naturalidade_id')
             ->join('etnia', 'etnia.id', '=', 'etnia_id')
-            ->selectRaw('pessoa.id, data, pessoa.nome, sexo_id, sexo.descricao as sexo, dt_nascimento, doc, rg, rg_orgao_expedidor, naturalidade_id,
+            ->selectRaw('pessoa.id, dt_criacao, pessoa.nome, sexo_id, sexo.descricao as sexo, dt_nascimento, doc, rg, rg_orgao_expedidor, naturalidade_id,
             cidade.nome as naturalidade,etnia_id, etnia.descricao as etnia,email, tel_residencia, tel_recado, tel_celular,
             tel_emerg1, tel_emerg2, nome_contato_emerg, alergia, sit_medica_especial, medicacao_controlada, fratura_cirurgia,
             recomendacao_emergencia_med, renda');

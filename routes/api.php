@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\EstadoCivilController;
+use App\Http\Controllers\EtniaController;
 use App\Http\Controllers\LogradouroController;
+use App\Http\Controllers\ParentescoController;
 use App\Http\Controllers\PessoaController;
+use App\Http\Controllers\SitTrabalhistaController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +38,22 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     //Person
     Route::apiResource('person', PessoaController::class);
     Route::post('person/search', [PessoaController::class, 'search'])->name('person.search');
+
+    //Civil Status
+    Route::apiResource('civil-status', EstadoCivilController::class);
+    Route::post('civil-status/search', [EstadoCivilController::class, 'search'])->name('civil-status.search');
+
+    //Race
+    Route::apiResource('race', EtniaController::class);
+    Route::post('race/search', [EtniaController::class, 'search'])->name('race.search');
+
+    //Kinship
+    Route::apiResource('kinship', ParentescoController::class);
+    Route::post('kinship/search', [ParentescoController::class, 'search'])->name('kinship.search');
+
+    //Kinship
+    Route::apiResource('work-situation', SitTrabalhistaController::class);
+    Route::post('work-situation/search', [SitTrabalhistaController::class, 'search'])->name('work-situation.search');
 });
 
 
