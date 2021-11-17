@@ -29,7 +29,7 @@ class CreateFichaTable extends Migration
             $table->timestamps();
 
             $table->foreign('situacao_id','fk_ficha_ficha_situacao_foreign')->references('id')->on('ficha_situacao');
-            $table->foreign('canditado_id','fk_ficha_candidato_foreign')->references('id')->on('pessoa');
+            $table->foreign('candidato_id','fk_ficha_candidato_foreign')->references('id')->on('pessoa');
             $table->foreign('responsavel_id','fk_ficha_responsavel_foreign')->references('id')->on('pessoa');
             $table->foreign('resp_parentesco_id','fk_ficha_parentesco_foreign')->references('id')->on('parentesco');
 
