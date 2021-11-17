@@ -37,7 +37,7 @@ class PessoaResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'data' => $this->data,
+            'dt_criacao' => $this->dt_criacao,
             'nome' => $this->nome,
             'sexo_id' => $this->sexo_id,
             'sexo' => $this->sexo,
