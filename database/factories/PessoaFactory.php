@@ -24,7 +24,7 @@ class PessoaFactory extends Factory
         $gender = $sexo_id == 1 ? 'male' : 'female';
 
         return [
-            'data' => $this->faker->date(),
+            'dt_criacao' => $this->faker->date(),
             'nome' => $this->faker->name($gender),
             'sexo_id' => $sexo_id,
             'dt_nascimento' => $this->faker->date,
