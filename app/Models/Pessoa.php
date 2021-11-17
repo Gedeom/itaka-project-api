@@ -430,7 +430,7 @@ class Pessoa extends Model
                 ->join('cidade', 'cidade.id', '=', 'naturalidade_id')
                 ->join('etnia', 'etnia.id', '=', 'etnia_id')
                 ->join('parentesco as par', 'par.id', '=', 'parentesco_id')
-                ->selectRaw('pessoa_grupo_familiar.id, parente.id as parente_id, pessoa_grupo_familiar.data, parente.data as dt_cad_pessoa, parente.nome, parentesco_id,par.descricao as parentesco,
+                ->selectRaw('pessoa_grupo_familiar.id, parente.id as parente_id, pessoa_grupo_familiar.data, parente.dt_criacao as dt_cad_pessoa, parente.nome, parentesco_id,par.descricao as parentesco,
                 sexo_id, sexo.descricao as sexo, dt_nascimento, doc, rg, rg_orgao_expedidor, naturalidade_id,
                 cidade.nome as naturalidade,etnia_id, etnia.descricao as etnia,email, tel_residencia, tel_recado, tel_celular,
                 tel_emerg1, tel_emerg2, nome_contato_emerg, alergia, sit_medica_especial, medicacao_controlada, fratura_cirurgia,
