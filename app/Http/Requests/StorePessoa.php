@@ -84,7 +84,7 @@ class StorePessoa extends FormRequest
             'numero_lograd' => 'required',
             'complemento_lograd' => 'nullable|string',
             'escola_id' => [
-                'required',
+                'nullable|string',
                 Rule::in(Escola::pluck('id', 'id'))
             ],
             'turma' => 'nullable|string',
