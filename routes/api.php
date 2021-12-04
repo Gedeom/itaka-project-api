@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CidadeController;
+use App\Http\Controllers\EscolaController;
 use App\Http\Controllers\EstadoCivilController;
 use App\Http\Controllers\EtniaController;
 use App\Http\Controllers\LogradouroController;
@@ -59,6 +60,10 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     //City
     Route::apiResource('city', CidadeController::class);
     Route::post('city/search', [CidadeController::class, 'search'])->name('city.search');
+
+    //School
+    Route::apiResource('school', EscolaController::class);
+    Route::post('school/search', [EscolaController::class, 'search'])->name('school.search');
 });
 
 
