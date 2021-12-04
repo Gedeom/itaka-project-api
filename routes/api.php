@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CidadeController;
 use App\Http\Controllers\EstadoCivilController;
 use App\Http\Controllers\EtniaController;
 use App\Http\Controllers\LogradouroController;
@@ -51,9 +52,13 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::apiResource('kinship', ParentescoController::class);
     Route::post('kinship/search', [ParentescoController::class, 'search'])->name('kinship.search');
 
-    //Kinship
+    //Work situation
     Route::apiResource('work-situation', SitTrabalhistaController::class);
     Route::post('work-situation/search', [SitTrabalhistaController::class, 'search'])->name('work-situation.search');
+
+    //City
+    Route::apiResource('city', CidadeController::class);
+    Route::post('city/search', [CidadeController::class, 'search'])->name('city.search');
 });
 
 

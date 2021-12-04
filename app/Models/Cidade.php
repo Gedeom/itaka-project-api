@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Utils\SearchUtils;
 use Eloquent;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -68,5 +70,48 @@ class Cidade extends Model
         }
 
         return $cidade_obj;
+    }
+
+    public function index()
+    {
+        return self::join('estado', 'estado.id', '=', 'estado_id')
+            ->selectRaw('cidade.id, cidade.nome,estado_id,estado.nome as estado, cidade.ibge, cidade.ddd')
+            ->get();
+    }
+
+    public function show($id)
+    {
+        $cidade = self::join('estado', 'estado.id', '=', 'estado_id')
+            ->selectRaw('cidade.id, cidade.nome,estado_id,estado.nome as estado, cidade.ibge, cidade.ddd')
+            ->where('cidade.id', '=', $id)
+            ->first();
+
+
+        if (!$cidade) {
+            throw new Exception('Nada Encontrado', -404);
+        }
+
+        return $cidade;
+    }
+
+    public function remove($id)
+    {
+        throw new Exception('Não suportado', -403);
+
+    }
+
+    public function search($data)
+    {
+        $cidade = self::join('estado', 'estado.id', '=', 'estado_id')
+            ->selectRaw('cidade.id, cidade.nome,estado_id,estado.nome as estado, cidade.ibge, cidade.ddd');
+
+        $cidade = (SearchUtils::createQuery($data, $cidade))->get();
+
+        return $cidade;
+    }
+
+    public function createOrUpdate($fields, $id = null)
+    {
+        throw new Exception('Não suportado', -403);
     }
 }
