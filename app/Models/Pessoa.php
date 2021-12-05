@@ -241,10 +241,10 @@ class Pessoa extends Model
         $tel_emerg1 = preg_replace('/[^0-9]/', '', $fields->tel_emerg1 ?? '');
         $tel_emerg2 = preg_replace('/[^0-9]/', '', $fields->tel_emerg2 ?? '');
         $renda = MaskUtils::decimalToSql($fields->renda);
-        $despesas = json_decode($fields->despesas);
-        $condicoes_sociais = json_decode($fields->condicoes_sociais);
-        $condicoes_moradia = json_decode($fields->condicoes_moradia);
-        $grupo_familiar = json_decode($fields->grupo_familiar);
+        $despesas = json_decode($fields->despesas ?? '[]');
+        $condicoes_sociais = json_decode($fields->condicoes_sociais ?? '[]');
+        $condicoes_moradia = json_decode($fields->condicoes_moradia ?? '[]');
+        $grupo_familiar = json_decode($fields->grupo_familiar ?? '[]');
         $necessidades_especiais = json_decode($fields->necessidades_especiais ?? '[]');
 
         PessoaGrupoFamiliar::where('pessoa_id', '=', $id)
