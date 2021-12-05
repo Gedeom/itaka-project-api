@@ -295,7 +295,7 @@ class Pessoa extends Model
         $pessoa->rg_orgao_expedidor = $fields->rg_orgao_expedidor;
         $pessoa->naturalidade_id = $fields->naturalidade_id;
         $pessoa->etnia_id = $fields->etnia_id;
-        $pessoa->email = $fields->email;
+        $pessoa->email = $fields->email ?? null;
         $pessoa->tel_residencia = $tel_residencia ?: null;
         $pessoa->tel_celular = $tel_celular ?: null;
         $pessoa->tel_recado = $tel_recado ?: null;
@@ -322,7 +322,7 @@ class Pessoa extends Model
         $pessoa_escolaridade = new PessoaEscolaridade();
         $pessoa_escolaridade->data = $data;
         $pessoa_escolaridade->pessoa_id = $pessoa->id;
-        $pessoa_escolaridade->escola_id = $fields->escola_id;
+        $pessoa_escolaridade->escola_id = $fields->escola_id ?? null;
         $pessoa_escolaridade->serie = $fields->serie ?? null;
         $pessoa_escolaridade->turma = $fields->turma ?? null;
         $pessoa_escolaridade->escolaridade = $fields->escolaridade;
