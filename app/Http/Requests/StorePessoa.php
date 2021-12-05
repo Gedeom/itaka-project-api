@@ -120,7 +120,6 @@ class StorePessoa extends FormRequest
             ], 403));
         }
 
-        dd($this->despesas);
         $despesas = json_decode($this->despesas,true);
         $condicoes_sociais = json_decode($this->condicoes_sociais,true);
         $condicoes_moradia = json_decode($this->condicoes_moradia,true);
