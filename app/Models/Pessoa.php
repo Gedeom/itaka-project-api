@@ -165,7 +165,7 @@ class Pessoa extends Model
 
     public function fichas()
     {
-        return $this->hasMany(Ficha::class, 'canditado_id');
+        return $this->hasMany(Ficha::class, 'candidato_id');
     }
 
     public function index()
@@ -180,7 +180,7 @@ class Pessoa extends Model
             recomendacao_emergencia_med, renda')
             ->get();
 
-        $this->addTableDependencies($pessoas);
+        self::addTableDependencies($pessoas);
 
         return $pessoas;
     }
@@ -203,7 +203,7 @@ class Pessoa extends Model
             throw new Exception('Nada Encontrado', -404);
         }
 
-        $this->addTableDependencies($pessoa);
+        self::addTableDependencies($pessoa);
 
         return $pessoa;
     }
@@ -233,8 +233,8 @@ class Pessoa extends Model
         $fields = (object)$fields;
         $doc = preg_replace('/[^0-9]/', '', $fields->doc);
         $rg = preg_replace('/[^0-9]/', '', $fields->rg);
-        $data = Carbon::createFromFormat('d/m/Y', $fields->data);
-        $dt_nascimento = Carbon::createFromFormat('d/m/Y', $fields->dt_nascimento);
+        $data = Carbon::createFromFormat('d/m/Y', $fields->data)->startOfDay();
+        $dt_nascimento = Carbon::createFromFormat('d/m/Y', $fields->dt_nascimento)->startOfDay();
         $tel_residencia = preg_replace('/[^0-9]/', '', $fields->tel_residencia ?? '');
         $tel_recado = preg_replace('/[^0-9]/', '', $fields->tel_recado ?? '');
         $tel_celular = preg_replace('/[^0-9]/', '', $fields->tel_celular ?? '');
@@ -404,15 +404,14 @@ class Pessoa extends Model
             recomendacao_emergencia_med, renda');
 
         $pessoas = (SearchUtils::createQuery($data, $pessoas))->get();
-        $this->addTableDependencies($pessoas);
+        self::addTableDependencies($pessoas);
 
         return $pessoas;
     }
 
 
-    private function addTableDependencies(&$pessoas, $data = null)
+    public static function addTableDependencies(&$pessoas, $get_by_ficha = false)
     {
-        $data = !$data ? 'NULL' : $data;
         $is_pessoa_obj = false;
 
         //verificar se é objeto
@@ -421,10 +420,18 @@ class Pessoa extends Model
             $is_pessoa_obj = true;
         }
 
-        /* @var $pessoas Pessoa[] */
         foreach ($pessoas as $p) {
+
+            if($get_by_ficha){
+                $id = $p->candidato_id;
+                $data = "" . $p->data->format('Y-m-d') . "";
+            }else{
+                $id = $p->id;
+                $data = 'NULL';
+            }
+
             $grupo_familiar = DB::table('pessoa_grupo_familiar')
-                ->where('pessoa_id', '=', $p->id)
+                ->where('pessoa_id', '=', $id)
                 ->join('pessoa as parente', 'parente.id', '=', 'parente_id')
                 ->join('sexo', 'sexo.id', '=', 'sexo_id')
                 ->join('cidade', 'cidade.id', '=', 'naturalidade_id')
@@ -441,7 +448,7 @@ class Pessoa extends Model
                 ->get();
 
             $endereco = DB::table('pessoa_endereco')
-                ->where('pessoa_id', '=', $p->id)
+                ->where('pessoa_id', '=', $id)
                 ->join('logradouro', 'logradouro.id', '=', 'logradouro_id')
                 ->join('bairro', 'bairro.id', '=', 'bairro_id')
                 ->join('cidade', 'cidade.id', '=', 'cidade_id')
@@ -449,13 +456,13 @@ class Pessoa extends Model
                 ->selectRaw('pessoa_endereco.id, pessoa_endereco.data, logradouro.id as logradouro_id, logradouro.nome as logradouro,
                 logradouro.cep, numero_lograd, complemento_lograd, bairro_id,bairro.nome as bairro, cidade_id,cidade.nome as cidade, estado_id,estado.nome as estado')
                 ->orderBy('pessoa_endereco.data', 'desc')
-                ->whereRaw("pessoa_endereco.data = coalesce($data,data)")
+                ->whereRaw("pessoa_endereco.data = coalesce('$data',data)")
                 ->first();
 
             $condicao_moradia = DB::table('pessoa_condicao_moradia')
                 ->join('pessoa_endereco as p_end', 'p_end.id', '=', 'endereco_pessoa_id')
                 ->join('condicao_moradia', 'condicao_moradia.id', '=', 'condicao_moradia_id')
-                ->where('p_end.pessoa_id', '=', $p->id)
+                ->where('p_end.pessoa_id', '=', $id)
                 ->selectRaw('pessoa_condicao_moradia.id, pessoa_condicao_moradia.data, condicao_moradia_id, condicao_moradia.descricao as condicao_moradia,
                 resposta, pessoa_condicao_moradia.descricao')
                 ->orderBy('pessoa_condicao_moradia.data', 'desc')
@@ -467,7 +474,7 @@ class Pessoa extends Model
 
             $condicao_social = DB::table('pessoa_condicao_social')
                 ->join('condicao_social', 'condicao_social.id', '=', 'condicao_social_id')
-                ->where('pessoa_id', '=', $p->id)
+                ->where('pessoa_id', '=', $id)
                 ->selectRaw('pessoa_condicao_social.id, data, condicao_social_id, condicao_social.descricao as condicao_social,
                 resposta, pessoa_condicao_social.descricao')
                 ->orderBy('pessoa_condicao_social.data', 'desc')
@@ -477,7 +484,7 @@ class Pessoa extends Model
 
             $despesa = DB::table('pessoa_despesa')
                 ->join('despesa', 'despesa.id', '=', 'despesa_id')
-                ->where('pessoa_id', '=', $p->id)
+                ->where('pessoa_id', '=', $id)
                 ->selectRaw('pessoa_despesa.id, data, despesa_id, despesa.descricao as despesa, vlr, observacoes')
                 ->orderBy('pessoa_despesa.data', 'desc')
                 ->orderBy('pessoa_despesa.id')
@@ -490,7 +497,7 @@ class Pessoa extends Model
                 ->join('bairro', 'bairro.id', '=', 'bairro_id')
                 ->join('cidade', 'cidade.id', '=', 'cidade_id')
                 ->join('estado', 'estado.id', '=', 'estado_id')
-                ->where('pessoa_id', '=', $p->id)
+                ->where('pessoa_id', '=', $id)
                 ->selectRaw('pessoa_escolaridade.id, data, escola_id,escola.escola, serie, turma, escolaridade, logradouro.id as logradouro_id, logradouro.nome as logradouro,
                 logradouro.cep, numero_lograd, complemento_lograd, bairro_id,bairro.nome as bairro, cidade_id,cidade.nome as cidade, estado_id,estado.nome as estado')
                 ->orderBy('pessoa_escolaridade.data', 'desc')
@@ -500,7 +507,7 @@ class Pessoa extends Model
 
             $estado_civil = DB::table('pessoa_estado_civil')
                 ->join('estado_civil', 'estado_civil.id', '=', 'estado_civil_id')
-                ->where('pessoa_id', '=', $p->id)
+                ->where('pessoa_id', '=', $id)
                 ->selectRaw('pessoa_estado_civil.id, data, estado_civil_id, estado_civil.descricao as estado_civil')
                 ->orderBy('pessoa_estado_civil.data', 'desc')
                 ->orderBy('pessoa_estado_civil.id')
@@ -509,7 +516,7 @@ class Pessoa extends Model
 
             $necessidade_especial = DB::table('pessoa_necessidade_especial')
                 ->join('necessidade_especial as nece', 'nece.id', '=', 'necessidade_especial_id')
-                ->where('pessoa_id', '=', $p->id)
+                ->where('pessoa_id', '=', $id)
                 ->selectRaw('pessoa_necessidade_especial.id, data, necessidade_especial_id,nece.descricao as necessidade_especial')
                 ->orderBy('pessoa_necessidade_especial.data', 'desc')
                 ->orderBy('pessoa_necessidade_especial.id')
@@ -518,7 +525,7 @@ class Pessoa extends Model
 
             $situacao_trabalhista = DB::table('pessoa_sit_trabalhista')
                 ->join('sit_trabalhista as sit', 'sit.id', '=', 'sit_trabalhista_id')
-                ->where('pessoa_id', '=', $p->id)
+                ->where('pessoa_id', '=', $id)
                 ->selectRaw('pessoa_sit_trabalhista.id, data, sit_trabalhista_id, sit.descricao as situacao_trabalhista')
                 ->orderBy('pessoa_sit_trabalhista.data', 'desc')
                 ->orderBy('pessoa_sit_trabalhista.id')
@@ -537,7 +544,6 @@ class Pessoa extends Model
 
 
         }
-
         if ($is_pessoa_obj)
             $pessoas = $pessoas[0];
     }

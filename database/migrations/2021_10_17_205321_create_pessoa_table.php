@@ -19,7 +19,7 @@ class CreatePessoaTable extends Migration
             $table->string('nome');
             $table->unsignedInteger('sexo_id');
             $table->date('dt_nascimento');
-            $table->string('doc',20);
+            $table->string('doc',20)->unique('unique_doc');
             $table->string('rg',20)->nullable();
             $table->string('rg_orgao_expedidor',20)->nullable();
             $table->unsignedInteger('naturalidade_id');

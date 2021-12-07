@@ -18,6 +18,9 @@ class CreateFichaSituacaoTable extends Migration
             $table->string('descricao');
             $table->timestamps();
         });
+
+        $seed = new \Database\Seeders\FichaSituacaoSeeder();
+        $seed->run();
     }
 
     /**

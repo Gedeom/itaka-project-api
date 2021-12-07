@@ -231,7 +231,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon $data
  * @property int $numero
  * @property int $situacao_id
- * @property int $canditado_id
+ * @property int $candidato_id
  * @property int $responsavel_id
  * @property int $resp_parentesco_id
  * @property int $processo_is_deferido

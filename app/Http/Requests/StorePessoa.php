@@ -39,7 +39,7 @@ class StorePessoa extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public static function rules()
     {
         return [
             'data' => 'required|date_format:d/m/Y',
@@ -48,7 +48,7 @@ class StorePessoa extends FormRequest
                 'required',
                 Rule::in(Sexo::pluck('id', 'id'))
             ],
-            'dt_nascimento' => 'required',
+            'dt_nascimento' => 'required|date_format:d/m/Y',
             'doc' => 'required',
             'rg' => 'required',
             'rg_orgao_expedidor' => 'required',
@@ -66,7 +66,6 @@ class StorePessoa extends FormRequest
             'tel_celular' => 'nullable|string',
             'tel_emerg1' => 'nullable|string',
             'tel_emerg2' => 'nullable|string',
-            'nome_contato_emerg' => Rule::requiredIf($this->tel_emerg1 || $this->tel_emerg2),
             'alergia' => 'nullable|string',
             'sit_medica_especial' => 'nullable|string',
             'medicacao_controlada' => 'nullable|string',
@@ -110,22 +109,32 @@ class StorePessoa extends FormRequest
     public function withValidator($validator)
     {
         $id = $this->route('address') ?: 0;
-
-        if ($validator->fails()) {
+        $validation = self::dataValidation($this->all(),$id);
+        if ($validation->errors()->count()) {
             throw new HttpResponseException(response()->json([
                 'msg' => 'Ops! Algum campo obrigatório não foi preenchido.',
                 'status' => false,
-                'errors' => $validator->errors(),
+                'errors' => $validation->errors(),
                 'url' => route($id ? 'person.update' : 'person.store')
             ], 403));
         }
+    }
 
-        $despesas = json_decode($this->despesas,true);
-        $condicoes_sociais = json_decode($this->condicoes_sociais,true);
-        $condicoes_moradia = json_decode($this->condicoes_moradia,true);
-        $grupo_familiar = json_decode($this->grupo_familiar,true);
-        $necessidades_especiais = json_decode($this->necessidades_especiais,true);
-        $data = Carbon::createFromFormat('d/m/Y', $this->data);
+    public static function dataValidation($dados, $id = 0,$force_ficha = 0){
+        $rules = self::rules();
+        $initial_validation = \Validator::make($dados,$rules);
+
+        if($initial_validation->fails()){
+            return $initial_validation;
+        }
+        $dados = (object) $dados;
+
+        $despesas = json_decode($dados->despesas ?? '[]',true);
+        $condicoes_sociais = json_decode($dados->condicoes_sociais ?? '[]',true);
+        $condicoes_moradia = json_decode($dados->condicoes_moradia ?? '[]',true);
+        $grupo_familiar = json_decode($dados->grupo_familiar ?? '[]',true);
+        $necessidades_especiais = json_decode($dados->necessidades_especiais ?? '[]',true);
+        $data = Carbon::createFromFormat('d/m/Y', $dados->data);
 
         $arr_person_dependencies = [
             'despesas' => $despesas,
@@ -135,7 +144,6 @@ class StorePessoa extends FormRequest
             'necessidades_especiais' => $necessidades_especiais,
         ];
 
-//        dd($arr_person_dependencies);
         $validate_person_dependencies = \Validator::make($arr_person_dependencies, [
             'despesas.*.despesa_id' => [
                 'required',
@@ -176,89 +184,89 @@ class StorePessoa extends FormRequest
         ]);
 
         $validate_person_dependencies->sometimes('condicoes_moradia.*.resposta','in', function($input,$item){
-
             return CondicaoMoradia::$resposta[$item['condicao_moradia_id']] === $item['resposta'];
         });
 
         $validate_person_dependencies->sometimes('condicoes_moradia.*.descricao','required', function($input,$item){
             $opt_descricao = CondicaoMoradia::getOptionDescricao($item['condicao_moradia_id'],$item['resposta']);
-
             return $opt_descricao->force;
         });
 
 
         if ($validate_person_dependencies->fails()) {
-            throw new HttpResponseException(response()->json([
-                'msg' => 'Ops! Erro na validação dos dados!',
-                'status' => false,
-                'errors' => $validate_person_dependencies->errors(),
-                'url' => route($id ? 'person.update' : 'person.store')
-            ], 403));
+            return $validate_person_dependencies;
         }
 
-        $doc_is_valid = ValidationUtils::validateDoc($this->doc);
-        $tel_res_is_valid = ValidationUtils::validateTelefone($this->tel_residencia);
-        $tel_rec_is_valid = ValidationUtils::validateTelefone($this->tel_recado);
-        $tel_cel_is_valid = ValidationUtils::validateTelefone($this->tel_celular);
-        $tel_emerg1_is_valid = ValidationUtils::validateTelefone($this->tel_emerg1);
-        $tel_emerg2_is_valid = ValidationUtils::validateTelefone($this->tel_emerg2);
+        $doc_is_valid = ValidationUtils::validateDoc($dados->doc);
+        $tel_res_is_valid = ValidationUtils::validateTelefone($dados->tel_residencia ?? '');
+        $tel_rec_is_valid = ValidationUtils::validateTelefone($dados->tel_recado ?? '');
+        $tel_cel_is_valid = ValidationUtils::validateTelefone($dados->tel_celular ?? '');
+        $tel_emerg1_is_valid = ValidationUtils::validateTelefone($dados->tel_emerg1 ?? '');
+        $tel_emerg2_is_valid = ValidationUtils::validateTelefone($dados->tel_emerg2 ?? '');
 
 
         if (!$doc_is_valid) {
-            $validator->errors()->add('doc', 'Documento não é valido!');
+            $initial_validation->errors()->add('doc', 'Documento não é valido!');
         }
 
-        if (($this->tel_residencia && !$tel_res_is_valid)) {
-            $validator->errors()->add('tel_residencia', 'Telefone de residência não é válido!');
+        if ((!empty($dados->tel_residencia) && !$tel_res_is_valid)) {
+            $initial_validation->errors()->add('tel_residencia', 'Telefone de residência não é válido!');
         }
 
-        if (($this->tel_recado && !$tel_rec_is_valid)) {
-            $validator->errors()->add('tel_recado', 'Telefone de recado não é válido!');
+        if ((!empty($dados->tel_recado) && !$tel_rec_is_valid)) {
+            $initial_validation->errors()->add('tel_recado', 'Telefone de recado não é válido!');
         }
 
-        if (($this->tel_celular && !$tel_cel_is_valid)) {
-            $validator->errors()->add('tel_celular', 'Telefone celular não é válido!');
+        if ((!empty($dados->tel_celular) && !$tel_cel_is_valid)) {
+            $initial_validation->errors()->add('tel_celular', 'Telefone celular não é válido!');
         }
 
-        if (($this->tel_emerg1 && !$tel_emerg1_is_valid)) {
-            $validator->errors()->add('tel_emerg1', 'Telefone emergencial 1 não é válido!');
+        if ((!empty($dados->tel_emerg1) && !$tel_emerg1_is_valid)) {
+            $initial_validation->errors()->add('tel_emerg1', 'Telefone emergencial 1 não é válido!');
         }
 
-        if (($this->tel_emerg2 && !$tel_emerg2_is_valid)) {
-            $validator->errors()->add('tel_emerg2', 'Telefone emergencial 2 não é válido!');
+        if ((!empty($dados->tel_emerg2) && !$tel_emerg2_is_valid)) {
+            $initial_validation->errors()->add('tel_emerg2', 'Telefone emergencial 2 não é válido!');
+        }
+
+        $doc = preg_replace('/[^0-9]/', '', $dados->doc);
+
+        $has_doc = Pessoa::where('id','<>',$id)
+            ->where('doc','=',$doc)
+            ->first();
+
+        if($has_doc){
+            $initial_validation->errors()->add('doc', 'Já existe o documento cadastrado!');
+        }
+
+        if((!empty($dados->tel_emerg1) || !empty($dados->tel_emerg2)) &&  empty($dados->nome_contato_emerg)){
+            $initial_validation->errors()->add('nome_contato_emerg', 'Informe o nome do contato de emergência!');
         }
 
         if ($id) {
             $pessoa = Pessoa::find($id);
-
             foreach ($pessoa->fichas as $ficha) {
                 if ($ficha->data->eq($data)) {
                     if (!count($despesas)) {
-                        $validator->errors()->add('despesas', 'Despesas precisa ser preenchido, pois existe ficha na data!');
+                        $initial_validation->errors()->add('despesas', 'Despesas precisa ser preenchido, pois existe ficha na data!');
                     }
 
                     if (!count($condicoes_sociais)) {
-                        $validator->errors()->add('condicoes_sociais', 'Condições sociais precisa ser preenchido, pois existe ficha na data!');
+                        $initial_validation->errors()->add('condicoes_sociais', 'Condições sociais precisa ser preenchido, pois existe ficha na data!');
                     }
 
                     if (!count($condicoes_moradia)) {
-                        $validator->errors()->add('condicoes_moradia', 'Condições moradia precisa ser preenchido, pois existe ficha na data!');
+                        $initial_validation->errors()->add('condicoes_moradia', 'Condições moradia precisa ser preenchido, pois existe ficha na data!');
                     }
 
                     if (!count($grupo_familiar)) {
-                        $validator->errors()->add('grupo_familiar', 'Grupo familiar precisa ser preenchido, pois existe ficha na data!');
+                        $initial_validation->errors()->add('grupo_familiar', 'Grupo familiar precisa ser preenchido, pois existe ficha na data!');
                     }
                 }
             }
         }
 
-        if ($validator->fails()) {
-            throw new HttpResponseException(response()->json([
-                'msg' => 'Ops! Algum campo obrigatório não foi preenchido.',
-                'status' => false,
-                'errors' => $validator->errors(),
-                'url' => route($id ? 'person.update' : 'person.store')
-            ], 403));
-        }
+
+        return $initial_validation;
     }
 }

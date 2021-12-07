@@ -4,6 +4,7 @@ use App\Http\Controllers\CidadeController;
 use App\Http\Controllers\EscolaController;
 use App\Http\Controllers\EstadoCivilController;
 use App\Http\Controllers\EtniaController;
+use App\Http\Controllers\FichaController;
 use App\Http\Controllers\LogradouroController;
 use App\Http\Controllers\ParentescoController;
 use App\Http\Controllers\PessoaController;
@@ -28,7 +29,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', [UserController::class, 'login'])->name('users.login');
 
-Route::group(['middleware' => 'jwt.verify'], function () {
+Route::group(['middleware' => ['cors', 'jwt.verify']], function () {
     //Users
     Route::apiResource('users', UserController::class);
     Route::post('logout', [UserController::class, 'logout'])->name('users.logout');
@@ -64,6 +65,10 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     //School
     Route::apiResource('school', EscolaController::class);
     Route::post('school/search', [EscolaController::class, 'search'])->name('school.search');
+
+    //Card
+    Route::apiResource('card', FichaController::class);
+    Route::post('card/search', [FichaController::class, 'search'])->name('card.search');
 });
 
 
