@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\EscolaTipo;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class StoreEscola extends FormRequest
 {
@@ -26,6 +28,10 @@ class StoreEscola extends FormRequest
     {
         return [
             'escola' => 'required',
+            'tipo_id' => [
+                'required',
+                Rule::in(EscolaTipo::pluck('id', 'id'))
+                ],
             'logradouro_id' => 'required',
             'numero_lograd' => 'required',
             'complemento_lograd' => 'string|nullable',

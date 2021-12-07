@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Escola;
+use App\Models\Escolaridade;
 use App\Models\Pessoa;
 use App\Models\PessoaCondicaoSocial;
 use App\Models\PessoaEscolaridade;
@@ -19,15 +20,13 @@ class PessoaEscolaridadeFactory extends Factory
 
     public function definition()
     {
-        $escolaridades = ['Ensino Superior Completo', 'Superior Incompleto','Ensino Médio Completo','Ensino Médio Incompleto','Ensino Fundamental Completo','Ensino Fundamental Incompleto'];
-
         return [
             'data' => $this->faker->date,
             'pessoa_id' => $this->faker->numberBetween(Pessoa::min('id'),Pessoa::max('id')),
             'escola_id' => $this->faker->numberBetween(Escola::min('id'),Escola::max('id')),
             'serie' => null,
             'turma' => null,
-            'escolaridade' => $this->faker->randomElement($escolaridades)
+            'escolaridade_id' => $this->faker->numberBetween(Escolaridade::min('id'),Escolaridade::max('id')),
         ];
     }
 }

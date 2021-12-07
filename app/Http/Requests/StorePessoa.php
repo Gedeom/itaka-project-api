@@ -7,6 +7,7 @@ use App\Models\CondicaoMoradia;
 use App\Models\CondicaoSocial;
 use App\Models\Despesa;
 use App\Models\Escola;
+use App\Models\Escolaridade;
 use App\Models\EstadoCivil;
 use App\Models\Etnia;
 use App\Models\Logradouro;
@@ -88,7 +89,10 @@ class StorePessoa extends FormRequest
             ],
             'turma' => 'nullable|string',
             'serie' => 'nullable|string',
-            'escolaridade' => 'required',
+            'escolaridade_id' => [
+                'required',
+                Rule::in(Escolaridade::pluck('id', 'id'))
+                ],
             'sit_trabalhista_id' => [
                 'required',
                 Rule::in(SitTrabalhista::pluck('id', 'id'))

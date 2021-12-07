@@ -26,6 +26,8 @@ class EscolaResource extends JsonResource
         return [
             'id' => $this->id,
             'escola' => $this->escola,
+            'tipo_id' => $this->tipo_id,
+            'tipo' => $this->tipo,
             'numero_lograd' => $this->numero_lograd,
             'complemento_lograd' => $this->complemento_lograd,
             'logradouro_id' => $this->logradouro_id,

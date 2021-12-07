@@ -325,7 +325,7 @@ class Pessoa extends Model
         $pessoa_escolaridade->escola_id = $fields->escola_id ?? null;
         $pessoa_escolaridade->serie = $fields->serie ?? null;
         $pessoa_escolaridade->turma = $fields->turma ?? null;
-        $pessoa_escolaridade->escolaridade = $fields->escolaridade;
+        $pessoa_escolaridade->escolaridade_id = $fields->escolaridade_id;
         $pessoa_escolaridade->save();
 
         $pessoa_estado_civil = new PessoaEstadoCivil();
@@ -456,7 +456,7 @@ class Pessoa extends Model
                 ->selectRaw('pessoa_endereco.id, pessoa_endereco.data, logradouro.id as logradouro_id, logradouro.nome as logradouro,
                 logradouro.cep, numero_lograd, complemento_lograd, bairro_id,bairro.nome as bairro, cidade_id,cidade.nome as cidade, estado_id,estado.nome as estado')
                 ->orderBy('pessoa_endereco.data', 'desc')
-                ->whereRaw("pessoa_endereco.data = coalesce('$data',data)")
+                ->whereRaw("pessoa_endereco.data = coalesce($data,data)")
                 ->first();
 
             $condicao_moradia = DB::table('pessoa_condicao_moradia')
@@ -497,8 +497,10 @@ class Pessoa extends Model
                 ->join('bairro', 'bairro.id', '=', 'bairro_id')
                 ->join('cidade', 'cidade.id', '=', 'cidade_id')
                 ->join('estado', 'estado.id', '=', 'estado_id')
+                ->join('escolaridade','escolaridade.id','=','pessoa_escolaridade.escolaridade_id')
                 ->where('pessoa_id', '=', $id)
-                ->selectRaw('pessoa_escolaridade.id, data, escola_id,escola.escola, serie, turma, escolaridade, logradouro.id as logradouro_id, logradouro.nome as logradouro,
+                ->selectRaw('pessoa_escolaridade.id, data, escola_id,escola.escola, serie, turma, escolaridade.id as escolaridade_id,
+                escolaridade.descricao as escolaridade,logradouro.id as logradouro_id, logradouro.nome as logradouro,
                 logradouro.cep, numero_lograd, complemento_lograd, bairro_id,bairro.nome as bairro, cidade_id,cidade.nome as cidade, estado_id,estado.nome as estado')
                 ->orderBy('pessoa_escolaridade.data', 'desc')
                 ->orderBy('pessoa_escolaridade.id')

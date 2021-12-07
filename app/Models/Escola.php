@@ -52,8 +52,11 @@ class Escola extends Model
             ->join('bairro', 'bairro.id', '=', 'bairro_id')
             ->join('cidade', 'cidade.id', '=', 'cidade_id')
             ->join('estado', 'estado.id', '=', 'estado_id')
-            ->selectRaw('escola.id, escola.escola, escola.numero_lograd,escola.complemento_lograd,lograd.nome as logradouro,
-            lograd.id as logradouro_id, lograd.cep,bairro_id,bairro.nome as bairro, cidade_id,cidade.nome as cidade, estado_id,estado.nome as estado')
+            ->join('escola_tipo as tipo','tipo.id','=','escola.tipo_id')
+            ->selectRaw('escola.id, escola.escola, tipo.id as tipo_id,tipo.descricao as tipo,
+            escola.numero_lograd,escola.complemento_lograd,lograd.nome as logradouro,
+            lograd.id as logradouro_id, lograd.cep,bairro_id,bairro.nome as bairro, cidade_id,cidade.nome as cidade, estado_id,estado.nome as estado
+            ')
             ->orderByRaw('escola.escola')
             ->get();
     }
@@ -70,6 +73,7 @@ class Escola extends Model
 
         $escola->escola = $fields->escola;
         $escola->logradouro_id = $fields->logradouro_id;
+        $escola->tipo_id = $fields->tipo_id;
         $escola->numero_lograd = $fields->numero_lograd;
         $escola->complemento_lograd = $fields->complemento_lograd ?? null;
         $escola->save();
@@ -83,7 +87,9 @@ class Escola extends Model
             ->join('bairro', 'bairro.id', '=', 'bairro_id')
             ->join('cidade', 'cidade.id', '=', 'cidade_id')
             ->join('estado', 'estado.id', '=', 'estado_id')
-            ->selectRaw('escola.id, escola.escola, escola.numero_lograd,escola.complemento_lograd,lograd.nome as logradouro,
+            ->join('escola_tipo as tipo','tipo.id','=','escola.tipo_id')
+            ->selectRaw('escola.id, escola.escola, tipo.id as tipo_id,tipo.descricao as tipo,
+            escola.numero_lograd,escola.complemento_lograd,lograd.nome as logradouro,
             lograd.id as logradouro_id, lograd.cep, bairro_id,bairro.nome as bairro, cidade_id,cidade.nome as cidade, estado_id,estado.nome as estado')
             ->where('escola.id', '=', $id)
             ->orderByRaw('escola.escola')
@@ -116,7 +122,9 @@ class Escola extends Model
             ->join('bairro', 'bairro.id', '=', 'bairro_id')
             ->join('cidade', 'cidade.id', '=', 'cidade_id')
             ->join('estado', 'estado.id', '=', 'estado_id')
-            ->selectRaw('escola.id, escola.escola, escola.numero_lograd,escola.complemento_lograd,lograd.nome as logradouro,
+            ->join('escola_tipo as tipo','tipo.id','=','escola.tipo_id')
+            ->selectRaw('escola.id, escola.escola, tipo.id as tipo_id,tipo.descricao as tipo,
+            escola.numero_lograd,escola.complemento_lograd,lograd.nome as logradouro,
             lograd.id as logradouro_id, lograd.cep, bairro_id,bairro.nome as bairro, cidade_id,cidade.nome as cidade, estado_id,estado.nome as estado')
             ->orderByRaw('escola');
 

@@ -15,7 +15,10 @@ use App\Models\PessoaGrupoFamiliar;
 use App\Models\PessoaNecessidadeEspecial;
 use App\Models\PessoaSitTrabalhista;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,7 +29,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory(1)->create();
+        $arr_user = [
+            'name' => 'adm', 'email' => 'adm@hotmail.com', 'email_verified_at' => Carbon::now(),
+            'password' => bcrypt('itakasystem12345'), 'remember_token' => 'qd3Ym512'
+        ];
+
+        if (!User::where('email', '=', $arr_user['email'])->first())
+            User::factory(1)->create($arr_user);
+
         Pessoa::factory(50)->create();
         Escola::factory(50)->create();
         PessoaGrupoFamiliar::factory(50)->create();

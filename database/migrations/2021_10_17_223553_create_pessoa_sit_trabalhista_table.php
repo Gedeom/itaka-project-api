@@ -22,7 +22,6 @@ class CreatePessoaSitTrabalhistaTable extends Migration
 
             $table->foreign('pessoa_id','fk_pessoa_sit_trabalhista_pessoa_foreign')->references('id')->on('pessoa');
             $table->foreign('sit_trabalhista_id','fk_pessoa_sit_trabalhista_sit_trabalhista_foreign')->references('id')->on('sit_trabalhista');
-
         });
     }
 
