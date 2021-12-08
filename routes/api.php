@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CidadeController;
 use App\Http\Controllers\EscolaController;
+use App\Http\Controllers\EscolaridadeController;
 use App\Http\Controllers\EstadoCivilController;
 use App\Http\Controllers\EtniaController;
 use App\Http\Controllers\FichaController;
@@ -61,6 +62,10 @@ Route::group(['middleware' => ['cors', 'jwt.verify']], function () {
     //City
     Route::apiResource('city', CidadeController::class);
     Route::post('city/search', [CidadeController::class, 'search'])->name('city.search');
+
+    //Schooling
+    Route::apiResource('schooling', EscolaridadeController::class);
+    Route::post('schooling/search', [EscolaridadeController::class, 'search'])->name('schooling.search');
 
     //School
     Route::apiResource('school', EscolaController::class);
