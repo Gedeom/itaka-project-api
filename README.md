@@ -30,7 +30,7 @@ php artisan serve
 ```
 
 #### Docker
-To do list repository is very easy to install and deploy in a Docker container.
+This repository is very easy to install and deploy in a Docker container.
 
 ```sh
 cd itaka-project-api
