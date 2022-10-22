@@ -20,10 +20,10 @@ use Illuminate\Support\Carbon;
  * @property int $bairro_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Bairro $bairro
- * @property-read Collection|Escola[] $escolas
+ * @property-read \App\Models\Bairro $bairro
+ * @property-read Collection|\App\Models\Escola[] $escolas
  * @property-read int|null $escolas_count
- * @property-read Collection|PessoaEndereco[] $pessoa_enderecos
+ * @property-read Collection|\App\Models\PessoaEndereco[] $pessoa_enderecos
  * @property-read int|null $pessoa_enderecos_count
  * @method static Builder|Logradouro newModelQuery()
  * @method static Builder|Logradouro newQuery()

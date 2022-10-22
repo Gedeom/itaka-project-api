@@ -17,11 +17,13 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $escola
  * @property int $logradouro_id
+ * @property int $tipo_id
  * @property string $numero_lograd
  * @property string|null $complemento_lograd
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Logradouro $logradouro
+ * @property-read \App\Models\Logradouro $logradouro
+ * @method static \Database\Factories\EscolaFactory factory(...$parameters)
  * @method static Builder|Escola newModelQuery()
  * @method static Builder|Escola newQuery()
  * @method static Builder|Escola query()
@@ -31,9 +33,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Escola whereId($value)
  * @method static Builder|Escola whereLogradouroId($value)
  * @method static Builder|Escola whereNumeroLograd($value)
+ * @method static Builder|Escola whereTipoId($value)
  * @method static Builder|Escola whereUpdatedAt($value)
  * @mixin Eloquent
- * @method static EscolaFactory factory(...$parameters)
  */
 class Escola extends Model
 {

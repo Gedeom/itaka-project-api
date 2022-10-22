@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Logradouro $logradouro
  * @property-read \App\Models\Pessoa $pessoa
+ * @method static \Database\Factories\PessoaEnderecoFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEndereco newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEndereco newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEndereco query()
@@ -30,7 +31,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEndereco wherePessoaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEndereco whereUpdatedAt($value)
  * @mixin \Eloquent
- * @method static \Database\Factories\PessoaEnderecoFactory factory(...$parameters)
  */
 class PessoaEndereco extends Model
 {

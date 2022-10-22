@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Pessoa $parente
  * @property-read \App\Models\Parentesco $parentesco
  * @property-read \App\Models\Pessoa $pessoa
+ * @method static \Database\Factories\PessoaGrupoFamiliarFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaGrupoFamiliar newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaGrupoFamiliar newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaGrupoFamiliar query()
@@ -29,7 +30,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaGrupoFamiliar wherePessoaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaGrupoFamiliar whereUpdatedAt($value)
  * @mixin \Eloquent
- * @method static \Database\Factories\PessoaGrupoFamiliarFactory factory(...$parameters)
  */
 class PessoaGrupoFamiliar extends Model
 {

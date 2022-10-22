@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|NecessidadeEspecial whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|NecessidadeEspecial whereUpdatedAt($value)
  * @mixin \Eloquent
- * @method static \Database\Factories\NecessidadeEspecialFactory factory(...$parameters)
  */
 class NecessidadeEspecial extends Model
 {

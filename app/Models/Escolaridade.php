@@ -7,6 +7,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Exception;
 
+/**
+ * App\Models\Escolaridade
+ *
+ * @property int $id
+ * @property string $descricao
+ * @method static \Illuminate\Database\Eloquent\Builder|Escolaridade newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Escolaridade newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Escolaridade query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Escolaridade whereDescricao($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Escolaridade whereId($value)
+ * @mixin \Eloquent
+ */
 class Escolaridade extends Model
 {
     use HasFactory;

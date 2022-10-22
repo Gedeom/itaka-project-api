@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\CondicaoSocial $condicao_social
  * @property-read \App\Models\Pessoa $pessoa
+ * @method static \Database\Factories\PessoaCondicaoSocialFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaCondicaoSocial newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaCondicaoSocial newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaCondicaoSocial query()
@@ -30,7 +31,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaCondicaoSocial whereResposta($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaCondicaoSocial whereUpdatedAt($value)
  * @mixin \Eloquent
- * @method static \Database\Factories\PessoaCondicaoSocialFactory factory(...$parameters)
  */
 class PessoaCondicaoSocial extends Model
 {

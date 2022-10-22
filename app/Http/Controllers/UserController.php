@@ -115,6 +115,7 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
+
         try {
             $token = $this
                 ->user

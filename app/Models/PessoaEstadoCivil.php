@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\EstadoCivil $estado_civil
  * @property-read \App\Models\Pessoa $pessoa
+ * @method static \Database\Factories\PessoaEstadoCivilFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEstadoCivil newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEstadoCivil newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEstadoCivil query()
@@ -26,7 +27,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEstadoCivil wherePessoaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEstadoCivil whereUpdatedAt($value)
  * @mixin \Eloquent
- * @method static \Database\Factories\PessoaEstadoCivilFactory factory(...$parameters)
  */
 class PessoaEstadoCivil extends Model
 {

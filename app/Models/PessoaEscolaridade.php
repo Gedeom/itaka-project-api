@@ -12,27 +12,27 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon $data
  * @property int $pessoa_id
  * @property int|null $escola_id
+ * @property int $escolaridade_id
  * @property string|null $serie
  * @property string|null $turma
- * @property string $escolaridade
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Escola|null $escola
  * @property-read \App\Models\Pessoa $pessoa
+ * @method static \Database\Factories\PessoaEscolaridadeFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade query()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade whereData($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade whereEscolaId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade whereEscolaridade($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade whereEscolaridadeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade wherePessoaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade whereSerie($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade whereTurma($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaEscolaridade whereUpdatedAt($value)
  * @mixin \Eloquent
- * @method static \Database\Factories\PessoaEscolaridadeFactory factory(...$parameters)
  */
 class PessoaEscolaridade extends Model
 {

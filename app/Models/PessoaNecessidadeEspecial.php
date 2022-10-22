@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\NecessidadeEspecial $necessidade_especial
  * @property-read \App\Models\Pessoa $pessoa
+ * @method static \Database\Factories\PessoaNecessidadeEspecialFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaNecessidadeEspecial newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaNecessidadeEspecial newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaNecessidadeEspecial query()
@@ -26,7 +27,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaNecessidadeEspecial wherePessoaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaNecessidadeEspecial whereUpdatedAt($value)
  * @mixin \Eloquent
- * @method static \Database\Factories\PessoaNecessidadeEspecialFactory factory(...$parameters)
  */
 class PessoaNecessidadeEspecial extends Model
 {

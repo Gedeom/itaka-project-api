@@ -17,8 +17,8 @@ use Illuminate\Support\Carbon;
  * @property int $cidade_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Cidade $cidade
- * @property-read Collection|Logradouro[] $logradouros
+ * @property-read \App\Models\Cidade $cidade
+ * @property-read Collection|\App\Models\Logradouro[] $logradouros
  * @property-read int|null $logradouros_count
  * @method static Builder|Bairro newModelQuery()
  * @method static Builder|Bairro newQuery()

@@ -23,6 +23,7 @@ class CreateLogradouroTable extends Migration
             $table->foreign('bairro_id','fk_logradouro_bairro_foreign')->references('id')->on('bairro');
         });
 
+
         $seed = new \Database\Seeders\LogradouroSeeder();
         $seed->run();
     }

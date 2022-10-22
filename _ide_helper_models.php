@@ -805,6 +805,6 @@ namespace App\Models{
  * @method static Builder|User whereUpdatedAt($value)
  * @mixin Eloquent
  */
-	class User extends \Eloquent implements \Tymon\JWTAuth\Contracts\JWTSubject {}
+	class User extends \Eloquent {}
 }
 

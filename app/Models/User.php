@@ -5,7 +5,6 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Eloquent;
 use Exception;
-use Hash;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,8 +15,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Hash;
+
 
 /**
  * App\Models\User
@@ -34,7 +33,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
  * @property-read int|null $notifications_count
  * @property-read Collection|PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
- * @method static UserFactory factory(...$parameters)
+ * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
@@ -48,14 +47,14 @@ use Tymon\JWTAuth\Facades\JWTAuth;
  * @method static Builder|User whereUpdatedAt($value)
  * @mixin Eloquent
  */
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var string[]
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
@@ -66,7 +65,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -84,27 +83,31 @@ class User extends Authenticatable implements JWTSubject
 
     public function login($credentials)
     {
-        if (!$token = JWTAuth::attempt($credentials)) {
+        $credentials = (object) $credentials;
+
+        $user = User::where('email', $credentials->email)->first();
+
+        if (!$user || !\Illuminate\Support\Facades\Hash::check($credentials->password, $user->password)) {
             throw new Exception('Credencias incorretas, verifique-as e tente novamente.', -404);
         }
-        return $token;
+
+        return $user->createToken('auth_token')->plainTextToken;
     }
 
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
 
     public function logout($token)
     {
-        if (!JWTAuth::invalidate($token)) {
-            throw new Exception('Erro. Tente novamente.', -404);
+        auth()->user()->tokens()->where('id', $token)->delete();
+    }
+
+    public function checkToken()
+    {
+
+        if(!auth('sanctum')->check()){
+            throw new Exception('Token inválido',322);
         }
+
+        return true;
     }
 
     public function index()

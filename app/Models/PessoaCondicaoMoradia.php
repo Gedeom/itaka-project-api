@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\CondicaoMoradia $condicao_moradia
  * @property-read \App\Models\PessoaEndereco $pessoa_endereco
+ * @method static \Database\Factories\PessoaCondicaoMoradiaFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaCondicaoMoradia newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaCondicaoMoradia newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaCondicaoMoradia query()
@@ -30,7 +31,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaCondicaoMoradia whereResposta($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaCondicaoMoradia whereUpdatedAt($value)
  * @mixin \Eloquent
- * @method static \Database\Factories\PessoaCondicaoMoradiaFactory factory(...$parameters)
  */
 class PessoaCondicaoMoradia extends Model
 {

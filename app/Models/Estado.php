@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $nome
  * @property string $uf
- * @property int $ibge
+ * @property int|null $ibge
  * @property int|null $pais_id
  * @property string|null $ddd
  * @property \Illuminate\Support\Carbon|null $created_at

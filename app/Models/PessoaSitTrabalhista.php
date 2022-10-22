@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Pessoa $pessoa
  * @property-read \App\Models\SitTrabalhista $situacao_trabalhista
+ * @method static \Database\Factories\PessoaSitTrabalhistaFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaSitTrabalhista newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaSitTrabalhista newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaSitTrabalhista query()
@@ -26,7 +27,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaSitTrabalhista whereSitTrabalhistaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaSitTrabalhista whereUpdatedAt($value)
  * @mixin \Eloquent
- * @method static \Database\Factories\PessoaSitTrabalhistaFactory factory(...$parameters)
  */
 class PessoaSitTrabalhista extends Model
 {

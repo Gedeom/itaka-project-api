@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
  * App\Models\Pessoa
  *
  * @property int $id
- * @property Carbon $data
+ * @property string $dt_criacao
  * @property string $nome
  * @property int $sexo_id
  * @property Carbon $dt_nascimento
@@ -33,7 +33,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $tel_celular
  * @property string|null $tel_emerg1
  * @property string|null $tel_emerg2
- * @property string $nome_contato_emerg
+ * @property string|null $nome_contato_emerg
  * @property string|null $alergia
  * @property string|null $sit_medica_especial
  * @property string|null $medicacao_controlada
@@ -42,35 +42,37 @@ use Illuminate\Support\Carbon;
  * @property string $renda
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Etnia $etnia
- * @property-read Cidade $naturalidade
- * @property-read Collection|PessoaCondicaoMoradia[] $relation_condicao_moradia
+ * @property-read \App\Models\Etnia $etnia
+ * @property-read Collection|\App\Models\Ficha[] $fichas
+ * @property-read int|null $fichas_count
+ * @property-read \App\Models\Cidade $naturalidade
+ * @property-read Collection|\App\Models\PessoaCondicaoMoradia[] $relation_condicao_moradia
  * @property-read int|null $relation_condicao_moradia_count
- * @property-read Collection|PessoaCondicaoSocial[] $relation_condicao_social
+ * @property-read Collection|\App\Models\PessoaCondicaoSocial[] $relation_condicao_social
  * @property-read int|null $relation_condicao_social_count
- * @property-read Collection|PessoaDespesa[] $relation_despesa
+ * @property-read Collection|\App\Models\PessoaDespesa[] $relation_despesa
  * @property-read int|null $relation_despesa_count
- * @property-read Collection|PessoaEndereco[] $relation_endereco
+ * @property-read Collection|\App\Models\PessoaEndereco[] $relation_endereco
  * @property-read int|null $relation_endereco_count
- * @property-read Collection|PessoaEscolaridade[] $relation_escolaridade
+ * @property-read Collection|\App\Models\PessoaEscolaridade[] $relation_escolaridade
  * @property-read int|null $relation_escolaridade_count
- * @property-read Collection|PessoaEstadoCivil[] $relation_estado_civil
+ * @property-read Collection|\App\Models\PessoaEstadoCivil[] $relation_estado_civil
  * @property-read int|null $relation_estado_civil_count
- * @property-read Collection|PessoaGrupoFamiliar[] $relation_grupo_familiar
+ * @property-read Collection|\App\Models\PessoaGrupoFamiliar[] $relation_grupo_familiar
  * @property-read int|null $relation_grupo_familiar_count
- * @property-read Collection|PessoaNecessidadeEspecial[] $relation_necessidade_especial
+ * @property-read Collection|\App\Models\PessoaNecessidadeEspecial[] $relation_necessidade_especial
  * @property-read int|null $relation_necessidade_especial_count
- * @property-read Collection|PessoaSitTrabalhista[] $relation_situacao_trabalhista
+ * @property-read Collection|\App\Models\PessoaSitTrabalhista[] $relation_situacao_trabalhista
  * @property-read int|null $relation_situacao_trabalhista_count
- * @property-read Sexo $sexo
- * @method static PessoaFactory factory(...$parameters)
+ * @property-read \App\Models\Sexo $sexo
+ * @method static \Database\Factories\PessoaFactory factory(...$parameters)
  * @method static Builder|Pessoa newModelQuery()
  * @method static Builder|Pessoa newQuery()
  * @method static Builder|Pessoa query()
  * @method static Builder|Pessoa whereAlergia($value)
  * @method static Builder|Pessoa whereCreatedAt($value)
- * @method static Builder|Pessoa whereData($value)
  * @method static Builder|Pessoa whereDoc($value)
+ * @method static Builder|Pessoa whereDtCriacao($value)
  * @method static Builder|Pessoa whereDtNascimento($value)
  * @method static Builder|Pessoa whereEmail($value)
  * @method static Builder|Pessoa whereEtniaId($value)
@@ -93,8 +95,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Pessoa whereTelResidencia($value)
  * @method static Builder|Pessoa whereUpdatedAt($value)
  * @mixin Eloquent
- * @property-read Collection|Ficha[] $fichas
- * @property-read int|null $fichas_count
  */
 class Pessoa extends Model
 {

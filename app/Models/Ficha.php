@@ -18,8 +18,8 @@ use Illuminate\Support\Carbon;
  * @property int $numero
  * @property int $situacao_id
  * @property int $candidato_id
- * @property int $responsavel_id
- * @property int $resp_parentesco_id
+ * @property int|null $responsavel_id
+ * @property int|null $resp_parentesco_id
  * @property int $processo_is_deferido
  * @property string|null $parecer_assistente_social
  * @property string|null $outros_gastos
@@ -27,14 +27,14 @@ use Illuminate\Support\Carbon;
  * @property string|null $obs_nescessarias
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Pessoa $candidato
- * @property-read Parentesco $resp_parentesco
- * @property-read Pessoa $responsavel
- * @property-read FichaSituacao $situacao
+ * @property-read \App\Models\Pessoa|null $candidato
+ * @property-read \App\Models\Parentesco|null $resp_parentesco
+ * @property-read \App\Models\Pessoa|null $responsavel
+ * @property-read \App\Models\FichaSituacao $situacao
  * @method static Builder|Ficha newModelQuery()
  * @method static Builder|Ficha newQuery()
  * @method static Builder|Ficha query()
- * @method static Builder|Ficha whereCanditadoId($value)
+ * @method static Builder|Ficha whereCandidatoId($value)
  * @method static Builder|Ficha whereCreatedAt($value)
  * @method static Builder|Ficha whereData($value)
  * @method static Builder|Ficha whereId($value)

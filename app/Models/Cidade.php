@@ -17,13 +17,13 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $nome
  * @property int $estado_id
- * @property int $ibge
- * @property string $ddd
+ * @property int|null $ibge
+ * @property string|null $ddd
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|Bairro[] $bairros
+ * @property-read Collection|\App\Models\Bairro[] $bairros
  * @property-read int|null $bairros_count
- * @property-read Estado $estado
+ * @property-read \App\Models\Estado $estado
  * @method static Builder|Cidade newModelQuery()
  * @method static Builder|Cidade newQuery()
  * @method static Builder|Cidade query()

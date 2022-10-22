@@ -1,0 +1,65 @@
+version: '3'
+services:
+
+  #PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: itaka-project-api/php
+    container_name: itaka-project-api
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./.docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - itaka-network
+
+  #Nginx Service
+  nginx:
+    image: nginx:alpine
+    container_name: itaka-nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8888:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./.docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - itaka-network
+
+  #MySQL Service
+  db:
+    image: mariadb:10.7.3
+    container_name: itaka-db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - 3307:3306
+    environment:
+      MARIADB_DATABASE: db_itaka
+      MARIADB_ROOT_PASSWORD: 'FMpfD2SdVm'
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./.docker/mysql/my.cnf:/etc/mysql/my.cnf
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    networks:
+      - itaka-network
+
+#Docker Networks
+networks:
+  itaka-network:
+    driver: bridge
+#Volumes
+volumes:
+  dbdata:
+    driver: local

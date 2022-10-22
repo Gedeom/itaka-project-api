@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Despesa $despesa
  * @property-read \App\Models\Pessoa $pessoa
+ * @method static \Database\Factories\PessoaDespesaFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaDespesa newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaDespesa newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaDespesa query()
@@ -30,7 +31,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaDespesa whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PessoaDespesa whereVlr($value)
  * @mixin \Eloquent
- * @method static \Database\Factories\PessoaDespesaFactory factory(...$parameters)
  */
 class PessoaDespesa extends Model
 {
