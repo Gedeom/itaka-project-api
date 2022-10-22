@@ -14,6 +14,8 @@ class LogradouroSeeder extends Seeder
      */
     public function run()
     {
+        ini_set('memory_limit', '-1');
+
         $sql = file_get_contents(database_path('sqls'.DIRECTORY_SEPARATOR.'Logradouro.sql'));
 
         DB::unprepared("set global max_allowed_packet=104857600");
